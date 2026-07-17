@@ -99,9 +99,10 @@
   }
   .dealer-btn.active{background:var(--gold); border-color:var(--gold); color:var(--felt-dark);}
   .dealer-tag{
-    display:inline-flex; align-items:center; gap:5px; font-size:12.5px; font-weight:700;
-    color:var(--felt-dark); background:var(--gold-soft); border-radius:999px; padding:4px 11px; margin-bottom:16px;
+    display:inline-flex; align-items:center; gap:7px; font-size:16px; font-weight:800;
+    color:var(--felt-dark); background:var(--gold-soft); border-radius:999px; padding:7px 16px 7px 12px; margin-bottom:16px;
   }
+  .dealer-tag .dicon{font-size:20px; line-height:1;}
   .grid-dealer{display:block; font-size:10px; font-weight:500; color:var(--ink-soft);}
   .ghost-btn{
     width:100%; padding:12px 0; border-radius:var(--radius); border:1.5px solid var(--line);
@@ -127,7 +128,7 @@
 
   /* ---------- Player score rows ---------- */
   .player-row{
-    display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line);
+    display:flex; align-items:center; gap:7px; padding:10px 0; border-bottom:1px dashed var(--line);
   }
   .player-name{flex:1; min-width:0;}
   .player-name .n{font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
@@ -137,8 +138,13 @@
     background:#fff; font-size:17px; font-weight:700; color:var(--ink-soft);
   }
   .sign-btn.neg{background:var(--red); color:#fff; border-color:var(--red);}
+  .zero-btn{
+    width:38px; height:38px; border-radius:var(--radius); border:1.5px solid var(--line);
+    background:#fff; font-size:12.5px; font-weight:700; color:var(--ink-soft);
+  }
+  .zero-btn.active{background:var(--felt); color:var(--gold-soft); border-color:var(--felt);}
   .score-input{
-    width:74px; height:38px; text-align:center; font-size:18px; font-weight:700;
+    width:62px; height:38px; text-align:center; font-size:18px; font-weight:700;
     border-radius:var(--radius); border:1.5px solid var(--line); background:#fff; color:var(--ink);
     font-variant-numeric:tabular-nums; font-family:ui-monospace, "SF Mono", Menlo, monospace;
   }
@@ -152,12 +158,13 @@
   .nav-btn.next{background:var(--felt); color:var(--gold-soft);}
 
   /* ---------- Standings strip (mini, on play screen) ---------- */
-  .standings-strip{display:flex; flex-direction:column; gap:5px; margin-top:20px; padding-top:14px; border-top:1px solid var(--line);}
+  .standings-strip{display:flex; flex-direction:column; gap:8px; margin-top:20px; padding-top:14px; border-top:1px solid var(--line);}
   .standings-strip .label{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-soft); font-weight:700; margin-bottom:4px;}
-  .srow{display:flex; align-items:center; gap:8px; font-size:14px;}
-  .srow .pos{width:16px; color:var(--ink-soft); font-weight:700; font-size:12px;}
-  .srow .nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .srow .tv{font-weight:700; font-variant-numeric:tabular-nums; font-family:ui-monospace, "SF Mono", Menlo, monospace;}
+  .srow{display:flex; align-items:center; gap:9px; font-size:17px;}
+  .srow .pos{width:18px; color:var(--ink-soft); font-weight:700; font-size:13px;}
+  .srow .nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;}
+  .srow .tv{font-weight:800; font-size:18px; font-variant-numeric:tabular-nums; font-family:ui-monospace, "SF Mono", Menlo, monospace;}
+  .srow .star{color:var(--gold); font-size:16px; flex:0 0 auto;}
   .srow.lead .nm, .srow.lead .tv{color:var(--felt-dark);}
   .srow.lead .pos{color:var(--gold);}
 
@@ -195,6 +202,23 @@
   .final-row .ft{font-size:17px; font-weight:800; font-family:ui-monospace, "SF Mono", Menlo, monospace;}
   .export-row{display:flex; gap:10px; margin-top:20px;}
   .export-row .primary-btn, .export-row .ghost-btn{margin-top:0;}
+
+  /* ---------- History ---------- */
+  .empty-hist{font-size:14px; color:var(--ink-soft); line-height:1.5; padding:20px 0;}
+  .hist-item{
+    border:1.5px solid var(--line); border-radius:var(--radius); padding:12px 14px; margin-bottom:10px; background:#fffdf8;
+  }
+  .hi-date{font-size:11.5px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;}
+  .hi-row{margin:4px 0 2px;}
+  .hi-players{font-size:15px; font-weight:700; color:var(--ink);}
+  .hi-winner{font-size:13.5px; color:var(--felt-dark); font-weight:600;}
+  .hr-list{margin-top:6px;}
+  .hr-row{display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line);}
+  .hr-suit{font-size:18px; line-height:1.3;}
+  .hr-suit.red{color:var(--red);} .hr-suit.black{color:var(--ink);}
+  .hr-desc{flex:1; font-size:13.5px; color:var(--ink); line-height:1.35;}
+  .hr-dealer{display:block; font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .hr-val{font-weight:800; font-size:16px; font-family:ui-monospace, "SF Mono", Menlo, monospace;}
 </style>
 </head>
 <body>
@@ -226,10 +250,10 @@
   function suitFor(i){ return SUITS[i % 4]; }
   function suitColor(s){ return (s === "♥" || s === "♦") ? "red" : "black"; }
 
-  var state = loadState() || defaultState();
+  var state = loadState() || defaultState([]);
 
-  function defaultState(){
-    return { screen:"setup", players:[], cells:{}, currentRound:0, setupCount:4 };
+  function defaultState(existingHistory){
+    return { screen:"setup", players:[], cells:{}, currentRound:0, setupCount:4, history: existingHistory || [] };
   }
   function loadState(){
     try{
@@ -237,6 +261,7 @@
       if(!raw) return null;
       var s = JSON.parse(raw);
       if(!s || !s.players) return null;
+      if(!s.history) s.history = [];
       return s;
     }catch(e){ return null; }
   }
@@ -245,34 +270,57 @@
   }
 
   function cellKey(pid, r){ return pid + "_" + r; }
-  function cellValue(pid, r){
-    var c = state.cells[cellKey(pid,r)];
+  function cellValue(g, pid, r){
+    var c = g.cells[cellKey(pid,r)];
     if(!c || c.mag === null || c.mag === undefined || c.mag === "") return null;
     var m = Math.abs(Number(c.mag));
     return c.neg ? -m : m;
   }
-  function total(pid){
+  function total(g, pid){
     var sum = 0;
     for(var r=0;r<15;r++){
-      var v = cellValue(pid, r);
+      var v = cellValue(g, pid, r);
       if(v !== null) sum += v;
     }
     return sum;
   }
-  function standingsSorted(){
-    return state.players.slice().sort(function(a,b){ return total(a.id) - total(b.id); });
+  function standingsSorted(g){
+    return g.players.slice().sort(function(a,b){ return total(g,a.id) - total(g,b.id); });
   }
-  function dealerForRound(r){
-    if(!state.players.length) return null;
-    var idx = ((state.dealerStartIndex || 0) + r) % state.players.length;
-    return state.players[idx];
+  function dealerForRound(g, r){
+    if(!g.players.length) return null;
+    var idx = ((g.dealerStartIndex || 0) + r) % g.players.length;
+    return g.players[idx];
   }
-  function roundComplete(r){
-    return state.players.every(function(p){ return cellValue(p.id, r) !== null; });
+  function roundComplete(g, r){
+    return g.players.every(function(p){ return cellValue(g, p.id, r) !== null; });
   }
-  function allComplete(){
-    for(var r=0;r<15;r++){ if(!roundComplete(r)) return false; }
+  function allComplete(g){
+    for(var r=0;r<15;r++){ if(!roundComplete(g, r)) return false; }
     return true;
+  }
+  function hasAnyScore(g){
+    for(var r=0;r<15;r++){
+      for(var i=0;i<g.players.length;i++){
+        if(cellValue(g, g.players[i].id, r) !== null) return true;
+      }
+    }
+    return false;
+  }
+  function archiveCurrentGame(hist){
+    hist = hist || [];
+    if(state.players.length > 0 && hasAnyScore(state)){
+      hist = hist.slice();
+      hist.unshift({
+        id:"g" + Date.now(),
+        date:new Date().toISOString(),
+        players:state.players.slice(),
+        cells:JSON.parse(JSON.stringify(state.cells)),
+        dealerStartIndex:state.dealerStartIndex || 0
+      });
+      if(hist.length > 30) hist = hist.slice(0,30);
+    }
+    return hist;
   }
 
   function fmt(v){ return v === null ? "–" : (v > 0 ? "+"+v : String(v)); }
@@ -280,10 +328,15 @@
   var app = document.getElementById("app");
 
   function render(){
+    if(state.screen !== "setup" && state.screen !== "history" && state.players.length === 0){
+      state.screen = "setup";
+    }
     if(state.screen === "setup") app.innerHTML = renderSetup();
     else if(state.screen === "play") app.innerHTML = renderPlay();
     else if(state.screen === "grid") app.innerHTML = renderGrid();
     else if(state.screen === "summary") app.innerHTML = renderSummary();
+    else if(state.screen === "history") app.innerHTML = renderHistory();
+    else if(state.screen === "historyDetail") app.innerHTML = renderHistoryDetail();
   }
 
   /* ---------------- SETUP ---------------- */
@@ -319,6 +372,7 @@
         '<div class="dealer-row">'+dealerBtns+'</div>'+
         '<div style="font-size:12px;color:var(--ink-soft);margin-top:8px;">Giver-turen flyttas sedan ett steg åt gången genom alla 15 omgångar.</div>'+
         '<button class="primary-btn" data-action="start">Starta spel</button>'+
+        (state.history && state.history.length ? '<button class="ghost-btn" data-action="tab" data-tab="history">Visa historik ('+state.history.length+')</button>' : '')+
       '</div>';
   }
 
@@ -332,7 +386,7 @@
     for(var i=0;i<15;i++){
       var cls = "round-dot";
       if(i === r) cls += " current";
-      else if(roundComplete(i)) cls += " done";
+      else if(roundComplete(state, i)) cls += " done";
       dots += '<div class="'+cls+'" data-action="gotoround" data-r="'+i+'">'+(i+1)+'</div>';
     }
     var sc = suitFor(r), scc = suitColor(sc);
@@ -341,12 +395,14 @@
     state.players.forEach(function(p){
       var c = state.cells[cellKey(p.id, r)] || {mag:null, neg:false};
       var magVal = (c.mag === null || c.mag === undefined) ? "" : c.mag;
-      var tot = total(p.id);
+      var isZero = (c.mag === 0);
+      var tot = total(state, p.id);
       rows += '<div class="player-row">'+
         '<div class="player-name"><div class="n">'+escapeHtml(p.name)+'</div><div class="t" id="total-'+p.id+'">Totalt: '+fmt(tot)+'</div></div>'+
         '<button class="sign-btn'+(c.neg?' neg':'')+'" data-action="togglesign" data-pid="'+p.id+'" data-r="'+r+'">'+(c.neg?'−':'+')+'</button>'+
         '<input class="score-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0" '+
           'data-action="scoreinput" data-pid="'+p.id+'" data-r="'+r+'" value="'+magVal+'">'+
+        '<button class="zero-btn'+(isZero?' active':'')+'" data-action="setzero" data-pid="'+p.id+'" data-r="'+r+'">0p</button>'+
         '</div>';
     });
 
@@ -358,7 +414,7 @@
         '<div class="round-dots">'+dots+'</div>'+
         '<div class="round-header"><span class="round-suit '+scc+'">'+sc+'</span><span class="round-num">Omgång '+(r+1)+'</span></div>'+
         '<div class="round-desc">'+ROUNDS[r]+'</div>'+
-        '<div class="dealer-tag">🂠 Delar: '+escapeHtml(dealerForRound(r).name)+'</div>'+
+        '<div class="dealer-tag"><span class="dicon">🂠</span> Delar: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
         rows+
         '<div class="nav-row">'+
           '<button class="nav-btn" data-action="prevround"'+(r===0?' disabled style="opacity:0.4"':'')+'>‹ Föregående</button>'+
@@ -369,17 +425,17 @@
   }
 
   function renderStandingsStrip(){
-    var sorted = standingsSorted();
+    var sorted = standingsSorted(state);
     var html = '<div class="label">Ställning just nu (lägst vinner)</div>';
     sorted.forEach(function(p, idx){
-      html += '<div class="srow'+(idx===0?' lead':'')+'"><span class="pos">'+(idx+1)+'</span><span class="nm">'+escapeHtml(p.name)+'</span><span class="tv">'+fmt(total(p.id))+'</span></div>';
+      html += '<div class="srow'+(idx===0?' lead':'')+'"><span class="pos">'+(idx+1)+'</span><span class="nm">'+escapeHtml(p.name)+(idx===0?' <span class="star">★</span>':'')+'</span><span class="tv">'+fmt(total(state, p.id))+'</span></div>';
     });
     return html;
   }
 
   function renderTabs(active){
     function t(id,label){ return '<div class="tab'+(active===id?' active':'')+'" data-action="tab" data-tab="'+id+'">'+label+'</div>'; }
-    return '<div class="tabs">'+t("play","Spela")+t("grid","Scorekort")+t("summary","Resultat")+'</div>';
+    return '<div class="tabs">'+t("play","Spela")+t("grid","Scorekort")+t("summary","Resultat")+t("history","Historik")+'</div>';
   }
 
   /* ---------------- GRID ---------------- */
@@ -392,9 +448,9 @@
     for(var r=0;r<15;r++){
       var cur = (r === state.currentRound);
       body += "<tr>";
-      body += "<td class='rd'>"+(r+1)+". "+suitFor(r)+"<span class='grid-dealer'>"+escapeHtml(dealerForRound(r).name)+"</span></td>";
+      body += "<td class='rd'>"+(r+1)+". "+suitFor(r)+"<span class='grid-dealer'>"+escapeHtml(dealerForRound(state, r).name)+"</span></td>";
       state.players.forEach(function(p){
-        var v = cellValue(p.id, r);
+        var v = cellValue(state, p.id, r);
         var cls = "val" + (cur ? " cur-round" : "") + (v !== null && v < 0 ? " neg-val" : "");
         body += "<td class='"+cls+"' data-action='gridcell' data-r='"+r+"'>"+fmt(v)+"</td>";
       });
@@ -402,7 +458,7 @@
     }
     var totRow = "<tr class='total-row'><td class='rd'>Totalt</td>";
     state.players.forEach(function(p){
-      var t = total(p.id);
+      var t = total(state, p.id);
       totRow += "<td class='val"+(t<0?" neg-val":"")+"'>"+fmt(t)+"</td>";
     });
     totRow += "</tr>";
@@ -419,12 +475,12 @@
 
   /* ---------------- SUMMARY ---------------- */
   function renderSummary(){
-    var sorted = standingsSorted();
-    var done = allComplete();
+    var sorted = standingsSorted(state);
+    var done = allComplete(state);
     var winner = sorted[0];
     var rows = "";
     sorted.forEach(function(p, idx){
-      rows += '<div class="final-row"><div class="rank">'+(idx+1)+'</div><div class="fn">'+escapeHtml(p.name)+'</div><div class="ft'+(total(p.id)<0?'" style="color:var(--red)':'')+'">'+fmt(total(p.id))+'</div></div>';
+      rows += '<div class="final-row"><div class="rank">'+(idx+1)+'</div><div class="fn">'+escapeHtml(p.name)+'</div><div class="ft'+(total(state,p.id)<0?'" style="color:var(--red)':'')+'">'+fmt(total(state,p.id))+'</div></div>';
     });
     return ''+
       '<div class="topbar"><div class="brand">Gin Rummy<small>Resultat</small></div>'+
@@ -434,13 +490,96 @@
         '<div class="winner-card">'+
           '<div class="wk">'+(done? "Spelet är klart":"Ställning just nu")+'</div>'+
           '<div class="wn">'+escapeHtml(winner ? winner.name : "–")+'</div>'+
-          '<div class="wt">'+(winner? fmt(total(winner.id))+" poäng · lägst vinner":"")+'</div>'+
+          '<div class="wt">'+(winner? fmt(total(state,winner.id))+" poäng · lägst vinner":"")+'</div>'+
         '</div>'+
         rows+
         '<div class="export-row">'+
           '<button class="primary-btn" data-action="share">Dela resultat</button>'+
           '<button class="ghost-btn" data-action="copy">Kopiera</button>'+
         '</div>'+
+      '</div>';
+  }
+
+  /* ---------------- HISTORY (list) ---------------- */
+  function formatDate(iso){
+    try{
+      var d = new Date(iso);
+      return d.toLocaleDateString("sv-SE", {day:"numeric", month:"short", year:"numeric"}) + " · " +
+             d.toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
+    }catch(e){ return ""; }
+  }
+  function renderHistory(){
+    var hist = state.history || [];
+    var items = "";
+    if(hist.length === 0){
+      items = '<div class="empty-hist">Inga sparade spel än.<br>När du trycker på ↺ Nytt spel sparas det avslutade spelet här.</div>';
+    } else {
+      hist.forEach(function(g){
+        var w = standingsSorted(g)[0];
+        items += '<div class="hist-item" data-action="openhistory" data-id="'+g.id+'">'+
+          '<div class="hi-date">'+formatDate(g.date)+'</div>'+
+          '<div class="hi-row"><span class="hi-players">'+g.players.map(function(p){return escapeHtml(p.name);}).join(", ")+'</span></div>'+
+          '<div class="hi-winner">🏆 '+ (w? escapeHtml(w.name)+" · "+fmt(total(g,w.id)) : "–") +'</div>'+
+        '</div>';
+      });
+    }
+    return ''+
+      '<div class="topbar"><div class="brand">Gin Rummy<small>Historik</small></div>'+
+        '<button class="icon-btn" data-action="newgame" title="Nytt spel">↺</button></div>'+
+      renderTabs("history")+
+      '<div class="sheet">'+
+        '<div class="setup-title" style="font-size:19px;">Tidigare spel</div>'+
+        '<div class="setup-sub">Tryck på ett spel för att se varje spelares omgångar.</div>'+
+        items+
+      '</div>';
+  }
+
+  /* ---------------- HISTORY DETAIL ---------------- */
+  function renderHistoryDetail(){
+    var g = (state.history || []).find(function(h){ return h.id === state.historyViewId; });
+    if(!g){
+      state.screen = "history";
+      return renderHistory();
+    }
+    var sorted = standingsSorted(g);
+    var winner = sorted[0];
+    var pid = state.historyPlayerId && g.players.some(function(p){return p.id===state.historyPlayerId;}) ? state.historyPlayerId : winner.id;
+
+    var finalRows = "";
+    sorted.forEach(function(p, idx){
+      finalRows += '<div class="final-row"><div class="rank">'+(idx+1)+'</div><div class="fn">'+escapeHtml(p.name)+'</div><div class="ft'+(total(g,p.id)<0?'" style="color:var(--red)':'')+'">'+fmt(total(g,p.id))+'</div></div>';
+    });
+
+    var pickerBtns = "";
+    g.players.forEach(function(p){
+      pickerBtns += '<button class="dealer-btn'+(p.id===pid?' active':'')+'" data-action="pickhistoryplayer" data-pid="'+p.id+'">'+escapeHtml(p.name)+'</button>';
+    });
+
+    var roundRows = "";
+    for(var r=0;r<15;r++){
+      var sc = suitFor(r), scc = suitColor(sc);
+      var v = cellValue(g, pid, r);
+      roundRows += '<div class="hr-row">'+
+        '<span class="hr-suit '+scc+'">'+sc+'</span>'+
+        '<span class="hr-desc">'+ROUNDS[r]+'<span class="hr-dealer">Delade: '+escapeHtml(dealerForRound(g,r).name)+'</span></span>'+
+        '<span class="hr-val'+(v!==null && v<0 ? ' neg-val':'')+'">'+fmt(v)+'</span>'+
+      '</div>';
+    }
+
+    return ''+
+      '<div class="topbar"><div class="brand">Gin Rummy<small>'+formatDate(g.date)+'</small></div>'+
+        '<button class="icon-btn" data-action="deletehistory" data-id="'+g.id+'" title="Radera">🗑</button></div>'+
+      '<div class="sheet">'+
+        '<button class="ghost-btn" style="margin-top:0;margin-bottom:16px;" data-action="backtohistory">‹ Till historik</button>'+
+        '<div class="winner-card">'+
+          '<div class="wk">Slutställning</div>'+
+          '<div class="wn">'+escapeHtml(winner.name)+'</div>'+
+          '<div class="wt">'+fmt(total(g,winner.id))+' poäng · lägst vinner</div>'+
+        '</div>'+
+        finalRows+
+        '<div class="dealer-label">Se en spelares omgångar</div>'+
+        '<div class="dealer-row" style="margin-bottom:14px;">'+pickerBtns+'</div>'+
+        '<div class="hr-list">'+roundRows+'</div>'+
       '</div>';
   }
 
@@ -451,16 +590,16 @@
     lines.push(new Date().toLocaleDateString("sv-SE"));
     lines.push("");
     for(var r=0;r<15;r++){
-      var parts = [(r+1)+". "+ROUNDS[r]+" (delar: "+dealerForRound(r).name+")"];
+      var parts = [(r+1)+". "+ROUNDS[r]+" (delar: "+dealerForRound(state, r).name+")"];
       state.players.forEach(function(p){
-        parts.push(p.name+": "+fmt(cellValue(p.id, r)));
+        parts.push(p.name+": "+fmt(cellValue(state, p.id, r)));
       });
       lines.push(parts.join(" | "));
     }
     lines.push("");
     lines.push("SLUTSTÄLLNING (lägst vinner):");
-    standingsSorted().forEach(function(p, idx){
-      lines.push((idx+1)+". "+p.name+" — "+fmt(total(p.id)));
+    standingsSorted(state).forEach(function(p, idx){
+      lines.push((idx+1)+". "+p.name+" — "+fmt(total(state, p.id)));
     });
     return lines.join("\n");
   }
@@ -529,9 +668,44 @@
       save();
       render();
     }
+    else if(action === "setzero"){
+      var zpid = el.getAttribute("data-pid"), zr = el.getAttribute("data-r");
+      var zkey = cellKey(zpid, zr);
+      var zc = state.cells[zkey] || {mag:null, neg:false};
+      if(zc.mag === 0){ zc.mag = null; } else { zc.mag = 0; zc.neg = false; }
+      state.cells[zkey] = zc;
+      save();
+      render();
+    }
+    else if(action === "openhistory"){
+      state.historyViewId = el.getAttribute("data-id");
+      state.historyPlayerId = null;
+      state.screen = "historyDetail";
+      save();
+      render();
+    }
+    else if(action === "backtohistory"){
+      state.screen = "history";
+      save();
+      render();
+    }
+    else if(action === "pickhistoryplayer"){
+      state.historyPlayerId = el.getAttribute("data-pid");
+      render();
+    }
+    else if(action === "deletehistory"){
+      if(confirm("Radera det här sparade spelet? Går inte att ångra.")){
+        var did = el.getAttribute("data-id");
+        state.history = (state.history || []).filter(function(h){ return h.id !== did; });
+        state.screen = "history";
+        save();
+        render();
+      }
+    }
     else if(action === "newgame"){
-      if(confirm("Starta ett nytt spel? Nuvarande scorekort raderas.")){
-        state = defaultState();
+      if(confirm("Starta ett nytt spel? Det pågående spelet sparas i historiken.")){
+        var hist = archiveCurrentGame(state.history);
+        state = defaultState(hist);
         save();
         render();
       }
@@ -577,7 +751,7 @@
   function refreshTotals(){
     state.players.forEach(function(p){
       var el = document.getElementById("total-"+p.id);
-      if(el) el.textContent = "Totalt: " + fmt(total(p.id));
+      if(el) el.textContent = "Totalt: " + fmt(total(state, p.id));
     });
     var strip = document.getElementById("standings-strip");
     if(strip) strip.innerHTML = renderStandingsStrip();
