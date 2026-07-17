@@ -250,7 +250,7 @@
     "Två triss (tretal) + resterande kort i svit (stege)"
   ];
   var SUITS = ["♠","♥","♦","♣"];
-  var APP_VERSION = "1.3";
+  var APP_VERSION = "1.4";
   function suitFor(i){ return SUITS[i % 4]; }
   function suitColor(s){ return (s === "♥" || s === "♦") ? "red" : "black"; }
 
@@ -429,7 +429,7 @@
         '<div class="round-dots">'+dots+'</div>'+
         '<div class="round-header"><span class="round-suit '+scc+'">'+sc+'</span><span class="round-num">Omgång '+(r+1)+'</span></div>'+
         '<div class="round-desc">'+ROUNDS[r]+'</div>'+
-        '<div class="dealer-tag"><span class="dicon">🂠</span> Delar: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
+        '<div class="dealer-tag"><span class="dicon">🂠</span> Delare: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
         rows+
         '<div class="nav-row">'+
           '<button class="nav-btn" data-action="prevround"'+(r===0?' disabled style="opacity:0.4"':'')+'>‹ Föregående</button>'+
@@ -601,7 +601,7 @@
     lines.push(new Date().toLocaleDateString("sv-SE"));
     lines.push("");
     for(var r=0;r<15;r++){
-      var parts = [(r+1)+". "+ROUNDS[r]+" (delar: "+dealerForRound(state, r).name+")"];
+      var parts = [(r+1)+". "+ROUNDS[r]+" (delare: "+dealerForRound(state, r).name+")"];
       state.players.forEach(function(p){
         parts.push(p.name+": "+fmt(cellValue(state, p.id, r)));
       });
