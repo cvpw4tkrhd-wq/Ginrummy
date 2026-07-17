@@ -222,6 +222,39 @@
   .hr-desc{flex:1; font-size:13.5px; color:var(--ink); line-height:1.35;}
   .hr-dealer{display:block; font-size:11px; color:var(--ink-soft); margin-top:2px;}
   .hr-val{font-weight:800; font-size:16px; font-family:ui-monospace, "SF Mono", Menlo, monospace;}
+
+  /* ---------- Wide screens (iPad, landscape) ---------- */
+  @media (min-width: 700px){
+    body{padding:24px 0;}
+    #app{max-width:960px; min-height:auto; border-radius:16px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+    .sheet{padding:30px 40px 40px; border-radius:0;}
+    .topbar{padding:20px 28px 14px;}
+    .brand{font-size:22px;}
+    .tabs{padding:0 28px 16px;}
+    .tab{padding:10px 4px; font-size:13.5px;}
+
+    .name-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 20px;}
+
+    .play-layout{display:grid; grid-template-columns:1fr 300px; gap:36px; align-items:start;}
+    .play-main{min-width:0;}
+    .play-side{position:sticky; top:24px;}
+    .standings-strip{
+      margin-top:0; padding:18px; border-top:none;
+      border:1.5px solid var(--line); border-radius:var(--radius); background:#fffdf8;
+    }
+    .round-desc{font-size:18px;}
+    .round-suit{font-size:32px;}
+    .player-name .n{font-size:16px;}
+    .score-input{width:130px; height:48px; font-size:22px;}
+    .srow{font-size:16px;}
+    .srow .tv{font-size:19px;}
+
+    .hist-item{padding:14px 18px;}
+    .hr-desc{font-size:14.5px;}
+  }
+  @media (min-width: 700px) and (orientation: landscape){
+    #app{max-width:1080px;}
+  }
 </style>
 </head>
 <body>
@@ -250,7 +283,7 @@
     "Två triss (tretal) + resterande kort i svit (stege)"
   ];
   var SUITS = ["♠","♥","♦","♣"];
-  var APP_VERSION = "1.4";
+  var APP_VERSION = "1.6";
   function suitFor(i){ return SUITS[i % 4]; }
   function suitColor(s){ return (s === "♥" || s === "♦") ? "red" : "black"; }
 
@@ -354,7 +387,7 @@
     var count = state.setupCount || 4;
     var names = state._setupNames || [];
     var countBtns = "";
-    for(var n=2;n<=5;n++){
+    for(var n=2;n<=6;n++){
       countBtns += '<button class="count-btn'+(n===count?' active':'')+'" data-action="setcount" data-n="'+n+'">'+n+'</button>';
     }
     var nameRows = "";
@@ -377,7 +410,7 @@
         '<div class="setup-title">Nytt spel</div>'+
         '<div class="setup-sub">Välj antal spelare och namn.</div>'+
         '<div class="count-row">'+countBtns+'</div>'+
-        nameRows+
+        '<div class="name-grid">'+nameRows+'</div>'+
         '<div class="dealer-label">Vem ger i första omgången?</div>'+
         '<div class="dealer-row">'+dealerBtns+'</div>'+
         '<div style="font-size:12px;color:var(--ink-soft);margin-top:8px;">Giver-turen flyttas sedan ett steg åt gången genom alla 15 omgångar.</div>'+
@@ -426,16 +459,20 @@
       renderTopbar("Omgång "+(r+1)+" av 15", '<button class="icon-btn" data-action="newgame" title="Nytt spel">↺</button>')+
       renderTabs("play")+
       '<div class="sheet">'+
-        '<div class="round-dots">'+dots+'</div>'+
-        '<div class="round-header"><span class="round-suit '+scc+'">'+sc+'</span><span class="round-num">Omgång '+(r+1)+'</span></div>'+
-        '<div class="round-desc">'+ROUNDS[r]+'</div>'+
-        '<div class="dealer-tag"><span class="dicon">🂠</span> Delare: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
-        rows+
-        '<div class="nav-row">'+
-          '<button class="nav-btn" data-action="prevround"'+(r===0?' disabled style="opacity:0.4"':'')+'>‹ Föregående</button>'+
-          '<button class="nav-btn next" data-action="nextround">'+(r===14?'Till slutställning':'Nästa omgång ›')+'</button>'+
+        '<div class="play-layout">'+
+          '<div class="play-main">'+
+            '<div class="round-dots">'+dots+'</div>'+
+            '<div class="round-header"><span class="round-suit '+scc+'">'+sc+'</span><span class="round-num">Omgång '+(r+1)+'</span></div>'+
+            '<div class="round-desc">'+ROUNDS[r]+'</div>'+
+            '<div class="dealer-tag"><span class="dicon">🂠</span> Delare: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
+            rows+
+            '<div class="nav-row">'+
+              '<button class="nav-btn" data-action="prevround"'+(r===0?' disabled style="opacity:0.4"':'')+'>‹ Föregående</button>'+
+              '<button class="nav-btn next" data-action="nextround">'+(r===14?'Till slutställning':'Nästa omgång ›')+'</button>'+
+            '</div>'+
+          '</div>'+
+          '<div class="play-side"><div class="standings-strip" id="standings-strip">'+renderStandingsStrip()+'</div></div>'+
         '</div>'+
-        '<div class="standings-strip" id="standings-strip">'+renderStandingsStrip()+'</div>'+
       '</div>';
   }
 
