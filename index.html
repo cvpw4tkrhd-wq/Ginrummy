@@ -114,12 +114,8 @@
     font-size:14px; font-weight:600; color:var(--ink);
   }
   .dealer-btn.active{background:var(--gold); border-color:var(--gold); color:var(--felt-dark);}
-  .dealer-tag{
-    display:inline-flex; align-items:center; gap:7px; font-size:16px; font-weight:800;
-    color:var(--felt-dark); background:var(--gold-soft); border-radius:999px; padding:7px 16px 7px 12px; margin-bottom:16px;
-  }
-  .dealer-tag .dicon{font-size:20px; line-height:1;}
   .grid-dealer{display:block; font-size:10px; font-weight:500; color:var(--ink-soft);}
+  .grid-short{display:block; font-size:11.5px; font-weight:700; color:var(--felt-dark); white-space:normal; line-height:1.25; margin:2px 0 1px;}
   .ghost-btn{
     width:100%; padding:12px 0; border-radius:var(--radius); border:1.5px solid var(--line);
     background:transparent; color:var(--ink-soft); font-size:14px; font-weight:600; margin-top:10px;
@@ -140,14 +136,26 @@
   .round-suit.red{color:var(--red);}
   .round-suit.black{color:var(--ink);}
   .round-num{font-size:12px; color:var(--ink-soft); letter-spacing:0.08em; text-transform:uppercase; font-weight:700;}
-  .round-desc{font-size:16px; color:var(--felt-dark); margin:2px 0 18px; line-height:1.4;}
+  .round-desc{font-size:19px; font-weight:800; color:var(--felt-dark); margin:2px 0 3px; line-height:1.3;}
+  .round-full{font-size:13px; color:var(--ink-soft); margin:0 0 18px; line-height:1.4;}
 
   /* ---------- Player score rows ---------- */
   .player-row{
-    display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line);
+    display:flex; align-items:center; gap:10px; padding:10px 8px; border-bottom:1px dashed var(--line);
+    border-radius:var(--radius); margin:0 -8px;
   }
+  .player-row.is-dealer{
+    background:var(--gold-soft); border-bottom:1px dashed var(--gold);
+  }
+  .dealer-flag{
+    display:inline-flex; align-items:center; gap:3px; font-size:11px; font-weight:800;
+    color:var(--felt-dark); background:var(--gold); border-radius:999px; padding:2px 8px 2px 6px;
+    flex:0 0 auto; white-space:nowrap;
+  }
+  .dealer-flag .dicon{font-size:13px; line-height:1;}
   .player-name{flex:1; min-width:0;}
-  .player-name .n{font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .player-name .n-row{display:flex; align-items:center; gap:6px; min-width:0;}
+  .player-name .n-text{font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:0 1 auto;}
   .player-name .t{font-size:11.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
   .score-input{
     width:120px; height:44px; text-align:center; font-size:20px; font-weight:700;
@@ -181,7 +189,7 @@
     padding:7px 8px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap;
   }
   table.score-grid th{color:var(--ink-soft); font-weight:700; font-size:11px;}
-  table.score-grid td.rd{text-align:left; color:var(--ink-soft); font-weight:600;}
+  table.score-grid td.rd{text-align:left; color:var(--ink-soft); font-weight:600; white-space:normal; min-width:150px; max-width:170px; vertical-align:top; padding-top:9px;}
   table.score-grid td.val{font-family:ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric:tabular-nums;}
   table.score-grid td.val.cur-round{background:rgba(198,161,91,0.18);}
   table.score-grid tr.total-row td{border-top:2px solid var(--felt); border-bottom:none; font-weight:800; padding-top:10px;}
@@ -250,9 +258,10 @@
       margin-top:0; padding:18px; border-top:none;
       border:1.5px solid var(--line); border-radius:var(--radius); background:#fffdf8;
     }
-    .round-desc{font-size:18px;}
+    .round-desc{font-size:22px;}
+    .round-full{font-size:14.5px;}
     .round-suit{font-size:32px;}
-    .player-name .n{font-size:16px;}
+    .player-name .n-text{font-size:16px;}
     .score-input{width:130px; height:48px; font-size:22px;}
     .srow{font-size:16px;}
     .srow .tv{font-size:19px;}
@@ -298,8 +307,25 @@
     "En stege på fem kort + två fyrtal",
     "Två triss (tretal) + resterande kort i svit (stege)"
   ];
+  var ROUNDS_SHORT = [
+    "2 Triss",
+    "1 Triss + 1 Fyrstege",
+    "3 Triss",
+    "2 Fyrstegar",
+    "1 Femstege + 2 Triss",
+    "4 Triss",
+    "2 Fyrstegar + 1 Triss",
+    "1 Fyrtal + 1 Femstege",
+    "2 Femstegar",
+    "1 Femtal + 2 Fyrstegar",
+    "3 Fyrstegar",
+    "2 Fyrtal + 1 Triss",
+    "1 Femtal + 1 Triss + 1 Par",
+    "1 Femstege + 2 Fyrtal",
+    "2 Triss + Rest I Stege"
+  ];
   var SUITS = ["♠","♥","♦","♣"];
-  var APP_VERSION = "2.0";
+  var APP_VERSION = "2.6";
   function suitFor(i){ return SUITS[i % 4]; }
   function suitColor(s){ return (s === "♥" || s === "♦") ? "red" : "black"; }
 
@@ -312,7 +338,7 @@
   var state = loadState() || defaultState([]);
 
   function defaultState(existingHistory){
-    return { screen:"setup", players:[], cells:{}, currentRound:0, setupCount:4, history: existingHistory || [] };
+    return { screen:"setup", players:[], cells:{}, currentRound:0, setupCount:4, history: existingHistory || [], confirmedRounds:{} };
   }
   function loadState(){
     try{
@@ -321,6 +347,7 @@
       var s = JSON.parse(raw);
       if(!s || !s.players) return null;
       if(!s.history) s.history = [];
+      if(!s.confirmedRounds) s.confirmedRounds = {};
       return s;
     }catch(e){ return null; }
   }
@@ -375,7 +402,8 @@
         date:new Date().toISOString(),
         players:state.players.slice(),
         cells:JSON.parse(JSON.stringify(state.cells)),
-        dealerStartIndex:state.dealerStartIndex || 0
+        dealerStartIndex:state.dealerStartIndex || 0,
+        confirmedRounds:JSON.parse(JSON.stringify(state.confirmedRounds || {}))
       });
       if(hist.length > 30) hist = hist.slice(0,30);
     }
@@ -383,6 +411,44 @@
   }
 
   function fmt(v){ return v === null ? "–" : String(v); }
+
+  function heatColor(v, r){
+    if(v === null || v < 0) return "";
+    if(v === 0){
+      var confirmed = (state.confirmedRounds && state.confirmedRounds[r]) || (r < state.currentRound);
+      if(!confirmed) return "";
+      return "background:rgb(58,178,88);color:#fff;font-weight:800;";
+    }
+    // Sammanhängande skala 1 -> 150: grönt vid låga tal, via gult, till mörkröd vid höga tal
+    var stops = [
+      [1,   [205, 232, 158]],
+      [15,  [223, 219, 96]],
+      [30,  [240, 195, 60]],
+      [45,  [235, 155, 45]],
+      [60,  [222, 108, 45]],
+      [70,  [206, 74, 44]],
+      [100, [182, 40, 30]],
+      [150, [138, 12, 12]]
+    ];
+    var vv = Math.min(v, 150);
+    var c = stops[stops.length-1][1];
+    for(var i=0;i<stops.length-1;i++){
+      var lo = stops[i], hi = stops[i+1];
+      if(vv <= hi[0] || i === stops.length-2){
+        var frac = (vv - lo[0]) / (hi[0] - lo[0]);
+        frac = Math.max(0, Math.min(1, frac));
+        c = [
+          Math.round(lo[1][0] + (hi[1][0]-lo[1][0]) * frac),
+          Math.round(lo[1][1] + (hi[1][1]-lo[1][1]) * frac),
+          Math.round(lo[1][2] + (hi[1][2]-lo[1][2]) * frac)
+        ];
+        break;
+      }
+    }
+    var brightness = (c[0]*299 + c[1]*587 + c[2]*114) / 1000;
+    var textColor = brightness < 140 ? "#fff" : "#3a2a10";
+    return "background:rgb("+c[0]+","+c[1]+","+c[2]+");color:"+textColor+";font-weight:800;";
+  }
 
   var app = document.getElementById("app");
 
@@ -459,13 +525,15 @@
     });
     save();
 
+    var dealer = dealerForRound(state, r);
     var rows = "";
     state.players.forEach(function(p){
       var c = state.cells[cellKey(p.id, r)];
       var magVal = c.mag;
       var tot = total(state, p.id);
-      rows += '<div class="player-row">'+
-        '<div class="player-name"><div class="n">'+escapeHtml(p.name)+'</div><div class="t" id="total-'+p.id+'">Totalt: '+fmt(tot)+'</div></div>'+
+      var isDealer = dealer && p.id === dealer.id;
+      rows += '<div class="player-row'+(isDealer?' is-dealer':'')+'">'+
+        '<div class="player-name"><div class="n-row"><span class="n-text">'+escapeHtml(p.name)+'</span>'+(isDealer?'<span class="dealer-flag"><span class="dicon">🂠</span>Delar</span>':'')+'</div><div class="t" id="total-'+p.id+'">Totalt: '+fmt(tot)+'</div></div>'+
         '<input class="score-input" type="text" inputmode="numeric" pattern="[0-9]*" '+
           'data-action="scoreinput" data-pid="'+p.id+'" data-r="'+r+'" value="'+magVal+'" onfocus="this.select()">'+
         '</div>';
@@ -479,8 +547,8 @@
           '<div class="play-main">'+
             '<div class="round-dots">'+dots+'</div>'+
             '<div class="round-header"><span class="round-suit '+scc+'">'+sc+'</span><span class="round-num">Omgång '+(r+1)+'</span></div>'+
-            '<div class="round-desc">'+ROUNDS[r]+'</div>'+
-            '<div class="dealer-tag"><span class="dicon">🂠</span> Delare: '+escapeHtml(dealerForRound(state, r).name)+'</div>'+
+            '<div class="round-desc">'+ROUNDS_SHORT[r]+'</div>'+
+            '<div class="round-full">'+ROUNDS[r]+'</div>'+
             rows+
             '<div class="nav-row">'+
               '<button class="nav-btn" data-action="prevround"'+(r===0?' disabled style="opacity:0.4"':'')+'>‹ Föregående</button>'+
@@ -516,11 +584,12 @@
     for(var r=0;r<15;r++){
       var cur = (r === state.currentRound);
       body += "<tr>";
-      body += "<td class='rd'>"+(r+1)+". "+suitFor(r)+"<span class='grid-dealer'>"+escapeHtml(dealerForRound(state, r).name)+"</span></td>";
+      body += "<td class='rd'>"+(r+1)+". "+suitFor(r)+"<span class='grid-short'>"+ROUNDS_SHORT[r]+"</span><span class='grid-dealer'>"+escapeHtml(dealerForRound(state, r).name)+"</span></td>";
       state.players.forEach(function(p){
         var v = cellValue(state, p.id, r);
         var cls = "val" + (cur ? " cur-round" : "") + (v !== null && v < 0 ? " neg-val" : "");
-        body += "<td class='"+cls+"' data-action='gridcell' data-r='"+r+"'>"+fmt(v)+"</td>";
+        var style = heatColor(v, r);
+        body += "<td class='"+cls+"'"+(style?" style=\""+style+"\"":"")+" data-action='gridcell' data-r='"+r+"'>"+fmt(v)+"</td>";
       });
       body += "</tr>";
     }
@@ -536,7 +605,7 @@
       renderTabs("grid")+
       '<div class="sheet">'+
         '<div class="grid-wrap"><table class="score-grid">'+head+body+totRow+'</table></div>'+
-        '<div style="font-size:12px;color:var(--ink-soft);margin-top:14px;">Tryck på en ruta för att hoppa till den omgången och redigera.</div>'+
+        '<div style="font-size:12px;color:var(--ink-soft);margin-top:14px;line-height:1.6;">Tryck på en ruta för att hoppa till den omgången och redigera.<br>🟢 Klargrönt = 0 poäng (efter bekräftad omgång) · 🟡 Gult = låga/mellanpoäng, blir varmare mot 60 · 🔴 Rött = 70 poäng och uppåt, mörkare ju högre.</div>'+
       '</div>';
   }
 
@@ -719,6 +788,7 @@
       render();
     }
     else if(action === "nextround"){
+      state.confirmedRounds[state.currentRound] = true;
       if(state.currentRound < 14){ state.currentRound += 1; save(); render(); }
       else { state.screen = "summary"; save(); render(); }
     }
